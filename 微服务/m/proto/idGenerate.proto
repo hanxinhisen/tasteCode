@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+service IDGenerate{
+    rpc GenID(Request) returns (Response){}
+}
+
+message Request {
+    string number = 1;
+}
+message Response {
+    string msg = 1;
+}

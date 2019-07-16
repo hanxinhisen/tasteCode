@@ -1,0 +1,56 @@
+// Created by Hisen at 2019-07-11.
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+var wg sync.WaitGroup
+var wg1 sync.WaitGroup
+
+func c() {
+	for i := 0; i < 1000000; i++ {
+		ch1 <- i
+	}
+	defer close(ch1)
+}
+
+func w() {
+	for i := 0; i < 3000; i++ {
+		wg.Add(1)
+		go m()
+	}
+	wg.Wait()
+	fmt.Println(25)
+	close(ch2)
+	fmt.Println(28)
+}
+
+func m() {
+	for i := range ch1 {
+		fmt.Println(1)
+		ch2 <- i * 2
+	}
+	wg.Done()
+	fmt.Println(36)
+
+}
+
+func consumer() {
+	for i := range ch2 {
+		fmt.Println(2)
+		fmt.Println(i)
+	}
+}
+
+var ch1 = make(chan int, 100)
+var ch2 = make(chan int, 10)
+
+func main() {
+	go c()
+	go consumer()
+	w()
+	fmt.Println(3)
+
+}

@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div id="result"></div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+<script>
+    if(typeof(EventSource)!=="undefined")
+    {
+        var source=new EventSource("http://10.100.1.22:8856/event");
+        //打开连接
+        source.onopen=function(event)
+        {
+            console.log("onopen",event);
+        };
+        //错误信息
+        source.οnerrοr=function(e)
+        {
+            console.log("err",e);
+        };
+        //处理接受到的消息
+        source.onmessage=function(event)
+        {
+            console.log("onmessage",event);
+            document.getElementById("result").innerHTML+=event.data + "<br />";
+            $('html, body').animate({scrollTop:$(document).height()}, 'slow');
+        };
+    }
+    else
+    {
+        document.getElementById("result").innerHTML="Sorry, your browser does not support server-sent events...";
+    }
+</script>
+</body>
